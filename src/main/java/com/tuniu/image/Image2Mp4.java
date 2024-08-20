@@ -1,4 +1,4 @@
-package com.shuyao.image;
+package com.tuniu.image;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -9,167 +9,121 @@ import org.bytedeco.opencv.global.opencv_core;
 import org.bytedeco.opencv.helper.opencv_imgcodecs;
 import org.bytedeco.opencv.opencv_core.IplImage;
 
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
 
 /**
- * 通过读取指定文件夹的图片生成MP4文件
- * 无法支持中文,即中文字符
+ * @author 海加尔金鹰 www.hjljy.cn
  * @version V1.0
+ * @email hjljy@outlook.com
  * @description: 图片合成MP4
  * @since 2020/5/16 18:00
  **/
 @Slf4j
 public class Image2Mp4 {
 
-    private static int width =  1080;
-    private static int height = 1442;
 
-    private static double videoFrameRate = 0.3;
-
-    static String mp3Path ="D:\\showFile\\000000001.MP3";
-
-    static String imgBatchFile = "D:\\showFile011\\";
-
-    static String img = "D:\\showFile012\\0820-scrit23-jojso(1)\\";
+   /* static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }*/
 
     public static void main(String[] args) throws Exception {
         //合成的MP4
-        String mp4SaveFolder = "D:\\showFile\\video21\\";
+        String mp4SavePath = "D:\\showFile\\viedu\\";
         //图片地址 这里面放了22张图片
+        String img = "D:\\showFile011\\0819-0989(1)\\";
 
-
-        // createVideoWithMp3(mp4SavePath,mp3Path, files);
-        //createVideoWithAudioByImgDir(mp4SavePath,mp3Path,img);
-        batchCreateVideoByParentFolder(mp4SaveFolder, imgBatchFile,mp3Path);
-
-
-    }
-
-
-    /******
-     * 批量指定一个父目录的文件夹，批量将制定文件夹的图片合成MP4
-     * @param mp4SaveFolder
-     * @param imageParentDirPath
-     * @param mp3Path
-     * @throws Exception
-     */
-    public static void batchCreateVideoByParentFolder(String mp4SaveFolder,  String imageParentDirPath,String mp3Path) throws Exception {
-        //合成的MP4
-        //String mp4SavePath = "D:\\showFile\\viedu\\";
-        //图片地址 这里面放了22张图片
-
-
-        //读取所有图片
-        File file = new File(imageParentDirPath);
+        File file = new File(img);
+        File[] files = file.listFiles();
+        //createViewMp4(mp4SavePath, files);
+        createViewMp4WithMp3(mp4SavePath, files);
+        /*//读取所有图片
+        File file = new File(img);
         if(file.isDirectory()){
             File[] files = file.listFiles();
-
-            String saveFolder = "";
-
             for (File viedImageFile: files) {
                 if(viedImageFile.isDirectory()){
                     File[] imageFiles = viedImageFile.listFiles();
                     if (imageFiles.length > 0) {
-
-
-                        saveFolder = mp4SaveFolder +File.separator+viedImageFile.getName();
-                        File outSaveFolder = new File(saveFolder);
-                        if(!outSaveFolder.exists()){
-                            outSaveFolder.mkdirs();
-                        }
-
                         //createViewMp4(mp4SavePath+viedImageFile.getName()+".mp4", imageFiles);
-                        createVideoWithMp3(saveFolder+File.separator+viedImageFile.getName(),mp3Path, imageFiles);
-
+                        createViewMp4WithMp3(mp4SavePath+viedImageFile.getName()+"WithMp3.mp4", Arrays.asList(imageFiles),
+                                1080, 1442);
                     }
                 }
             }
-        }
-    }
-
-    /****
-     * 将指定文件夹的图片合成MP4
-     * @param mp4SaveDir
-     * @param audioPath
-     * @param imageFileDir
-     * @throws Exception
-     */
-    public static void createVideoWithAudioByImgDir(String mp4SaveDir,String audioPath,String imageFileDir) throws Exception {
-        File file = new File(imageFileDir);
-        if(null != file && file.isDirectory()){
-            File[] imageFiles = file.listFiles();
-            createVideoWithMp3(mp4SaveDir, audioPath, imageFiles);
-        }
-
+        }*/
     }
 
 
-    private static void createVideoWithMp3(String mp4SaveDir,String audioPath,  File[] imageFiles) throws Exception {
+
+    private static void createViewMp4WithMp3(String mp4SavePath,  File[] imageFiles) throws Exception {
+        int width =  1080;
+        int height = 1442;
         List<File> fileList = new ArrayList<>();
         for (File file1: imageFiles) {
             fileList.add(file1);
         }
-        String mp4SavePathName = mp4SaveDir+".mp4";
-        createVideoWithMp3(mp4SavePathName, audioPath,fileList, width, height);
+        String mp4SavePathName = mp4SavePath+UUID.randomUUID()+"002.mp4";
+        String mp3 ="D:\\showFile\\000000001.MP3";
+        String outPutName = mp4SavePath+"23.mp4";
+
+        createViewMp4WithMp3(mp4SavePathName, mp3,fileList, width, height);
     }
 
 
-    private static void createVideoMp4(String mp4SavePath,String audioPath,  File[] imageFiles) throws Exception {
+
+
+    private static void createViewMp4(String mp4SavePath,  File[] imageFiles) throws Exception {
+        int width =  1080;
+        int height = 1442;
         List<File> fileList = new ArrayList<>();
         for (File file1: imageFiles) {
             fileList.add(file1);
         }
         String mp4SavePathName = mp4SavePath+"001.mp4";
         createViewMp4(mp4SavePathName, fileList, width, height);
+        String mp3 ="D:\\showFile\\000000001.MP3";
         String outPutName = mp4SavePath+"23.mp4";
-        mergeAudioAndVideo(mp4SavePathName, audioPath, outPutName);
+
+        mergeAudioAndVideo(mp4SavePathName, mp3, outPutName);
+        // createViewMp4WithMp3(mp4SavePath, fileList, width, height);
     }
 
-    private static void createViewMp4(String mp4SaveDir, String audioPath, File[] imageFiles) throws Exception {
-        List<File> fileList = new ArrayList<>();
-        for (File file1: imageFiles) {
-            fileList.add(file1);
+
+    public static boolean mergeAudioAndVideo(String videoPath, String audioPath, String outPut) throws Exception {
+        boolean isCreated = true;
+        File file = new File(videoPath);
+        if(!file.exists()){
+            return false;
         }
-        String mp4SavePathName = mp4SaveDir+"001.mp4";
-        createViewMp4(mp4SavePathName, fileList, width, height);
-        String outPutName = mp4SaveDir+"23.mp4";
 
-        mergeAudioAndVideo(mp4SavePathName, audioPath, outPutName);
-    }
-
-
-    private static void mergeAudioAndVideo(String videoPath, String audioPath, String outPut) throws Exception {
-
-        //没有音频文件 直接返回原文件
+        /*//没有音频文件 直接返回原文件
         if (null == audioPath){
             new File(videoPath).renameTo(new File(outPut));
-            return;
-        }
-
+            return false;
+        }*/
         FFmpegFrameRecorder recorder = null;
-        FrameGrabber grabberVideo = null;
-        FrameGrabber grabberAudio = null;
+        FrameGrabber grabber1 = null;
+        FrameGrabber grabber2 = null;
         try {
             //抓取视频帧
-            grabberVideo = new FFmpegFrameGrabber(videoPath);
+            grabber1 = new FFmpegFrameGrabber(videoPath);
             //抓取音频帧
-            grabberAudio = new FFmpegFrameGrabber(audioPath);
-            grabberVideo.start();
-            grabberAudio.start();
+            grabber2 = new FFmpegFrameGrabber(audioPath);
+            grabber1.start();
+            grabber2.start();
             //创建录制
             recorder = new FFmpegFrameRecorder(outPut,
-                    grabberVideo.getImageWidth(), grabberVideo.getImageHeight(),
-                    grabberAudio.getAudioChannels());
-
+                    grabber1.getImageWidth(), grabber1.getImageHeight(),
+                    grabber2.getAudioChannels());
             recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
-
             recorder.setFormat("mp4");
-            recorder.setFrameRate(grabberVideo.getFrameRate());
-            recorder.setSampleRate(grabberAudio.getSampleRate());
-            // 视频质量，0表示无损
+            recorder.setFrameRate(grabber1.getFrameRate());
+            recorder.setSampleRate(grabber2.getSampleRate());
+            // 视频质量&#xff0c;0表示无损
             recorder.setVideoQuality(0);
             recorder.start();
 
@@ -177,20 +131,19 @@ public class Image2Mp4 {
             Frame frame1;
             Frame frame2 = null;
             //先录入视频
-            while ((frame1 = grabberVideo.grabFrame()) != null) {
+            while ((frame1 = grabber1.grabFrame()) != null) {
                 recorder.record(frame1);
             }
 
 
             //然后录入音频
-            while ((frame2 = grabberAudio.grabFrame()) != null) {
+            while ((frame2 = grabber2.grabFrame()) != null) {
                 recorder.record(frame2);
             }
-            //然后录入音频
-            audioEntry(frame2, grabberVideo, grabberAudio, recorder);
-
-            grabberVideo.stop();
-            grabberAudio.stop();
+            /*//然后录入音频
+            audioEntry(frame2, grabber1, grabber2, recorder);*/
+            grabber1.stop();
+            grabber2.stop();
             recorder.stop();
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,16 +152,17 @@ public class Image2Mp4 {
                 if (recorder == null) {
                     recorder.release();
                 }
-                if (grabberVideo == null) {
-                    grabberVideo.release();
+                if (grabber1 == null) {
+                    grabber1.release();
                 }
-                if (grabberAudio == null) {
-                    grabberAudio.release();
+                if (grabber2 == null) {
+                    grabber2.release();
                 }
             } catch (FrameRecorder.Exception e) {
                 e.printStackTrace();
             }
         }
+        return isCreated;
     }
 
 
@@ -221,7 +175,7 @@ public class Image2Mp4 {
      * @param height
      * @throws Exception
      */
-    private static void createVideoWithMp3(String mp4SavePath, String mp3Path,List<File> fileList, int width, int height) throws Exception {
+    private static void createViewMp4WithMp3(String mp4SavePath, String mp3Path,List<File> fileList, int width, int height) throws Exception {
 
         //视频宽高最好是按照常见的视频的宽高  16：9  或者 9：16
         FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(mp4SavePath, width, height);
@@ -231,7 +185,7 @@ public class Image2Mp4 {
         //文件格式mp4
         recorder.setFormat("mp4");
         //每一秒多少帧，即1s会记录多少张照片，设置视频为25帧每秒
-        recorder.setFrameRate(videoFrameRate);
+        recorder.setFrameRate(0.3);
         //设置视频的比特率 (比特率越高，视频越清晰，文件越大)
         //视频每秒大小，值越大图片转过来的压缩率就越小，视频就越清晰，文件也越大
         recorder.setVideoBitrate(80000);
@@ -277,7 +231,7 @@ public class Image2Mp4 {
                     recorder.stop();
                 }*/
 
-                //此处非常吃内存，如果图片过多，会内存溢出
+                //此处非常吃内存
                 IplImage image = opencv_imgcodecs.cvLoadImage(file.getPath());
                 Frame frame = converter.convert(image);
                 //录制
@@ -322,23 +276,6 @@ public class Image2Mp4 {
         }
     }
 
-
-    private static void audioEntry(Frame frame, FrameGrabber grabberVideo, FrameGrabber grabberAudio,FrameRecorder recorder ) throws Exception {
-        long grabber1Timestamp = grabberVideo.getTimestamp();
-        while(( (frame =  grabberAudio.grabFrame()) !=null) && grabber1Timestamp > 0){
-            //若视频长度小于音频时长，则截取音频帧
-            if(grabber1Timestamp <= grabberAudio.getTimestamp()) break;
-            recorder.record(frame);
-        }
-        long differ = grabber1Timestamp - grabberAudio.getTimestamp();
-        //如果视频时长大于音频时长，则循环录入
-        if(differ>0){
-            grabberVideo.setTimestamp(differ);
-            audioEntry(frame,grabberVideo,grabberAudio,recorder);
-        }
-    }
-
-
     /****
      * 录制音频
      * @param frame  视频帧
@@ -373,7 +310,7 @@ public class Image2Mp4 {
         //文件格式
         recorder.setFormat("mp4");
         //设置视频为25帧每秒
-        recorder.setFrameRate(videoFrameRate);
+        recorder.setFrameRate(1);
 
         //设置视频编码层模式
         recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
@@ -418,7 +355,7 @@ public class Image2Mp4 {
         //文件格式
         recorder.setFormat("mp4");
         //设置视频为25帧每秒
-        recorder.setFrameRate(videoFrameRate);
+        recorder.setFrameRate(25);
 
         //设置视频编码层模式
         recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
