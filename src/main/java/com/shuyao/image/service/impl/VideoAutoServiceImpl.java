@@ -1,20 +1,50 @@
 package com.shuyao.image.service.impl;
 
-import com.shuyao.image.ImageRandomSelector;
-import com.shuyao.image.dto.ImageDTO;
-import com.shuyao.image.dto.VideoMergeDTO;
-import com.shuyao.image.service.ImageAutoService;
+import com.shuyao.image.dto.VideoMergeBatchDTO;
+import com.shuyao.image.dto.VideoMergeSimpleDTO;
 import com.shuyao.image.service.VideoAutoService;
 import com.shuyao.image.video.FFmpegUtil;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 
 @Service
 public class VideoAutoServiceImpl implements VideoAutoService {
 
-    public String videoAutoMergeSimple(VideoMergeDTO videoMergeDTO) throws IOException {
-        FFmpegUtil.createSimpleVideoByFolder(videoMergeDTO.getVideoSourceFolder(),videoMergeDTO.getOutputFilePath());
+    @Override
+    public String videoAutoMergeSimple(VideoMergeSimpleDTO videoMergeSimpleDTO) throws IOException {
+        FFmpegUtil.createSimpleVideoByFolder(videoMergeSimpleDTO.getVideoSourceFolder(),videoMergeSimpleDTO.getVideoOutputPath());
+        return "success";
+    }
+
+
+
+    @Override
+    public String videoAutoMergeBatch(VideoMergeBatchDTO videoMergeBatchDTO) throws IOException {
+
+        String videoSourceParentFolder = videoMergeBatchDTO.getVideoSourceParentFolder();
+        String videoOutputFolder = videoMergeBatchDTO.getVideoOutputFolder();
+
+        File file = new File(videoSourceParentFolder);
+        if(null == file || !file.exists() || !file.isDirectory()){
+            throw new RuntimeException("[videoSourceParentFolder] is not a folder");
+        }
+
+        File outDir = new File(videoOutputFolder);
+        if(!outDir.exists()){
+            outDir.mkdirs();
+        }
+
+        //获取所有的子目录视频文件夹
+        File[] listFiles = file.listFiles();
+        for (File fileFolder : listFiles){
+            if(null != fileFolder && fileFolder.isDirectory()) {
+                String videoSourceFolder = fileFolder.getAbsolutePath();
+                String videoOutputFilePath = videoOutputFolder + File.separator + fileFolder.getName() + ".mp4";
+                FFmpegUtil.createSimpleVideoByFolder(videoSourceFolder, videoOutputFilePath);
+            }
+        }
         return "success";
     }
 }

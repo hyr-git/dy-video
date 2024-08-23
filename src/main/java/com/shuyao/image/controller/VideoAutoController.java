@@ -1,8 +1,7 @@
 package com.shuyao.image.controller;
 
-import com.shuyao.image.dto.ImageDTO;
-import com.shuyao.image.dto.VideoMergeDTO;
-import com.shuyao.image.service.ImageAutoService;
+import com.shuyao.image.dto.VideoMergeBatchDTO;
+import com.shuyao.image.dto.VideoMergeSimpleDTO;
 import com.shuyao.image.service.VideoAutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +20,14 @@ public class VideoAutoController {
     private VideoAutoService videoAutoService;
 
     @PostMapping("/simpleAutoMerge")
-    public String simpleAuto(@RequestBody VideoMergeDTO videoMergeDTO) throws IOException {
+    public String simpleAutoMerge(@RequestBody VideoMergeSimpleDTO videoMergeDTO) throws IOException {
         String imageAutoCreate = videoAutoService.videoAutoMergeSimple(videoMergeDTO);
+        return "success";
+    }
+
+    @PostMapping("/batchAutoMerge")
+    public String batchAutoMerge(@RequestBody VideoMergeBatchDTO videoMergeDTO) throws IOException {
+        String imageAutoCreate = videoAutoService.videoAutoMergeBatch(videoMergeDTO);
         return "success";
     }
 
