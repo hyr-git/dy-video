@@ -54,6 +54,5 @@ public class ImageToVideoConverter {
         Matcher mat = pat.matcher(str) ;
         System.out.println(mat.find());
         System. out.println (mat.replaceAll(""));
-        }
     }
 }

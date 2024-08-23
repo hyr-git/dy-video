@@ -1,11 +1,11 @@
 package com.shuyao.image.video;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.UUID;
 import com.shuyao.image.utils.VideoFileUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
-import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.progress.Progress;
 import net.bramp.ffmpeg.progress.ProgressListener;
@@ -13,10 +13,7 @@ import org.springframework.util.StringUtils;
 import ws.schild.jave.DefaultFFMPEGLocator;
 import ws.schild.jave.FFMPEGExecutor;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.rmi.server.ExportException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,30 +33,47 @@ public class VideoMergeFFmpegCmd {
      * ffmpeg -i concat a.mp4|b.mp4 -C copy out .mp4
      * 只会适用于ts和f1v等一 些格式。mp4格式整体有一 层容器，而不像ts这类格式可以直接拼接， 需要先解开容器再对提职的视频流进行拼接
      * 因此使用ffmpeg -f concat -safe 0 -i my1ist.txt -c copy output
+     *
+     * ffmpeg-amd64-2.7.3.exe -f concat -safe 0 -i D:\私活\dy-viedo\5b2797a6-6ff8-429f-a821-06aa00fb1e68temp.txt -c copy D:\showFile-out\0819-0989(1).mp4
+     *
+     * ffmpeg -f concat -safe 0 -i files.txt -c copy D:\showFile\12output.mp4
      */
     public static boolean concatVideo(List<String> files, String outputFile) throws IOException {
         //地址放在txt文件
-        String txtFile = USERDIR + SEPARATOR + "temp.txt";
+        String txtFile = USERDIR + SEPARATOR + UUID.fastUUID() +"temp.txt";
         String txtPath = createConcatTxtFile(files, txtFile);
 
       /*  FFmpeg ffmpeg = new FFmpeg("D:\\Program Files\\ffmpeg7\\bin\\ffmpeg.exe"); // 替换为FFmpeg可执行文件的路径
         FFprobe ffprobe = new FFprobe("D:\\Program Files\\ffmpeg7\\bin\\ffprobe.exe"); // 替换为FFprobe可执行文件的路径
 */
+
+        BufferedReader reader = null;
+
         //TODO 使用的是默认的，也可以使用自定义的ffmpeg 和ffprobe
         FFMPEGExecutor executor = new DefaultFFMPEGLocator().createExecutor();
-        executor.addArgument("-f");
-        executor.addArgument("concat");
-        executor.addArgument("-safe");
-        executor.addArgument("0");
-        executor.addArgument("-i");
-        executor.addArgument(txtPath);
-        executor.addArgument("-c");
-        executor.addArgument("copy");
-        executor.addArgument(outputFile);
-        executor.execute();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(executor.getErrorStream()));
-        String msg = reader.lines().collect(Collectors.joining("\n"));
-        log.info(msg);
+        try {
+            executor.addArgument("-f");
+            executor.addArgument("concat");
+            executor.addArgument("-safe");
+            executor.addArgument("0");
+            executor.addArgument("-i");
+            executor.addArgument(txtPath);
+            executor.addArgument("-c");
+            executor.addArgument("copy");
+            executor.addArgument(outputFile);
+            executor.execute();
+            reader = new BufferedReader(new InputStreamReader(executor.getErrorStream()));
+            String msg = reader.lines().collect(Collectors.joining("\n"));
+            log.info(msg);
+        } catch (ExportException e) {
+            log.error("合并视频失败", e);
+            return false;
+        } finally {
+            if(null != reader){
+                reader.close();
+            }
+        }
+
 
         File newFile = new File(outputFile);
         if (newFile.exists()) {
@@ -188,7 +202,6 @@ public class VideoMergeFFmpegCmd {
         if (!StringUtils.hasLength(outputFilePathBatch)) {
             throw new ExportException("输出文件[outputFilePathBatch=]文件路径不存在");
         }
-
 
         createBatchVideoByFolder(videoSourceParentFolderBatch, outputFilePathBatch);
     }

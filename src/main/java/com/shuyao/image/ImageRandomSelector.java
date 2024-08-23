@@ -99,7 +99,6 @@ public class ImageRandomSelector {
 
         ImageDTO   imageDTO = ImageDTO.builder().renameImageFlag(true).build();
         generateNewFolders(sourceDirPath,outDirPath,newDirFileName,newViewFolders, repeatRate);
-        // executorService.shutdownNow();
     }
 
 
@@ -156,36 +155,10 @@ public class ImageRandomSelector {
                 fileDir.mkdirs();
             }
 
-
             List<String> randomImageFolders = entry.getValue();
-
             log.info("newViewFolderName:{},values:{}",newViewFolderName,randomImageFolders);
-
-            //randomImageSelector.createRandomImageFolders(randomImageFolders,sourceDirPath,outDirPath,newViewFolderName);
             imageRandomSelector.createBatchRandomImageFolders(randomImageFolders,sourceDirPath,outDirPath,newViewFolderName);
-
-            /*randomImageFolders.stream().forEach(item->{
-                //文件名称-图片名称
-                String[] split = item.split(PATH_FILE_SPLIT);
-                String tempName = split[0];
-                String tempImageName = split[1];
-
-                //log.info("tempName: " + tempName + " tempImageName: " + tempImageName);
-                //老的文件路径
-                File oldFile = new File(sourceDirPath + "\\" + tempName + "\\" , tempImageName);
-
-
-                //新的文件路径
-                File newFile = new File(outDirPath + "\\" + newViewFolderName + "\\" , tempImageName);
-                //文件复制
-                try {
-                       FileCopyUtils.copy(oldFile, newFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });*/
         }
-
     }
 
 
