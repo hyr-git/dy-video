@@ -74,7 +74,7 @@ public class FFmpegUtil {
     public static void mergeVideo(List<String> fileList, String outputPath) throws IOException {
         //地址放在txt文件
         String txtFile = USERDIR + SEPARATOR +"temp.txt";
-        txtFile = "D:\\showFile\\viedu\\temp.txt";
+        //txtFile = "D:\\showFile\\viedu\\temp.txt";
         String txtPath = createConcatTxtFile(fileList, txtFile);
 
         mergeVideo(txtPath, outputPath);
@@ -119,9 +119,12 @@ public class FFmpegUtil {
         reader.close();
         // 等待命令执行完成
         try {
-            process.waitFor();
-        } catch (InterruptedException e) {
+            FileUtil.del(textPath);
+            //process.waitFor();
+        } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            process.exitValue();
         }
     }
 
