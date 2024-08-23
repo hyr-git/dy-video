@@ -42,6 +42,7 @@ public class ImageToVideoConverter {
 
     public static void main(String[] args) {
         /*try {
+        try {
             convertImagesToVideo("D:\\showFile008\\0819-脚本23-L马文静(500)", "D:\\showFile008\\0819-脚本23-L马文静(500)\\video.mp4",
                     640, 480, 30.0);
         } catch (Exception e) {
@@ -53,5 +54,6 @@ public class ImageToVideoConverter {
         Matcher mat = pat.matcher(str) ;
         System.out.println(mat.find());
         System. out.println (mat.replaceAll(""));
+        }
     }
 }

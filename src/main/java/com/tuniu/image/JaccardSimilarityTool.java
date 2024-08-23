@@ -1,5 +1,6 @@
 package com.tuniu.image;
 
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.bag.HashBag;
@@ -7,6 +8,7 @@ import org.apache.commons.collections4.bag.HashBag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class JaccardSimilarityTool {
