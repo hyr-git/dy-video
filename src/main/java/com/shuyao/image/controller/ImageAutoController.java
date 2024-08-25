@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/image")
 @Api(tags= "图片自动生成")
@@ -23,7 +25,7 @@ public class ImageAutoController {
 
     @PostMapping("/autoCreate")
     @ApiOperation(value = "图片自动生成")
-    public String imageAutoCreate(@RequestBody ImageDTO imageDTO){
+    public String imageAutoCreate(@RequestBody ImageDTO imageDTO) throws IOException {
         String imageAutoCreate = imageAutoService.imageAutoCreate(imageDTO);
         return "success";
     }

@@ -27,7 +27,7 @@ public class ImageDTO {
 
     //新生成的文件夹数量
     @ApiParam(name = "newDirNum",value = "新生成的文件夹数量",required = true)
-    private int newDirNum;
+    private int newDirFolderNum;
 
     //重复率
     @ApiParam(name = "repeatRate",value = "重复率",required = true)

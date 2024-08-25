@@ -128,7 +128,7 @@ public class ImageRandomSelector {
             return ;
         }
 
-        VideoFileUtils.sortFilesByNameNo(fileFolders);
+        VideoFileUtils.sortFilesByFieldName(fileFolders);
 
         //二、按照指定数量生成指定的文件夹
         for (int i = 0; i < newViewFolders; i++) {

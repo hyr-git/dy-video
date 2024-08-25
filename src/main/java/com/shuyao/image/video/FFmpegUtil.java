@@ -56,7 +56,7 @@ public class FFmpegUtil {
      */
     public static void createSimpleVideoByFolder(String videoSourceFolder, String outputFilePath) throws IOException {
         List<File> fileList = VideoFileUtils.getVideoFiles(videoSourceFolder);
-        VideoFileUtils.sortFilesByNameNo(fileList);
+        VideoFileUtils.sortFilesByFieldName(fileList);
 
         List<String> filePathList = fileList.stream().map(File::getAbsolutePath)
                 .collect(Collectors.toList());
@@ -64,16 +64,16 @@ public class FFmpegUtil {
         log.info("filePathList==================={}", filePathList);
 
         try {
-            mergeVideo(filePathList, outputFilePath);
+            mergeVideo(videoSourceFolder,filePathList, outputFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public static void mergeVideo(List<String> fileList, String outputPath) throws IOException {
+    public static void mergeVideo(String videoSourceFolder,List<String> fileList, String outputPath) throws IOException {
         //地址放在txt文件
-        String txtFile = USERDIR + SEPARATOR +"temp.txt";
+        String txtFile = videoSourceFolder + SEPARATOR+"temp.txt";
         //txtFile = "D:\\showFile\\viedu\\temp.txt";
         String txtPath = createConcatTxtFile(fileList, txtFile);
 
@@ -119,7 +119,7 @@ public class FFmpegUtil {
         reader.close();
         // 等待命令执行完成
         try {
-            FileUtil.del(textPath);
+//FileUtil.del(textPath);
             //process.waitFor();
         } catch (Exception e) {
             e.printStackTrace();
