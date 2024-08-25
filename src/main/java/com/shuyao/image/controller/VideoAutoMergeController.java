@@ -1,5 +1,6 @@
 package com.shuyao.image.controller;
 
+import com.shuyao.image.base.R;
 import com.shuyao.image.dto.VideoMergeBatchDTO;
 import com.shuyao.image.dto.VideoMergeSimpleDTO;
 import com.shuyao.image.service.VideoAutoService;
@@ -24,9 +25,9 @@ public class VideoAutoMergeController {
 
     @PostMapping("/simpleAutoMerge")
     @ApiOperation(value = "单个文件视频合并")
-    public ResponseEntity simpleAutoMerge(@RequestBody @Validated VideoMergeSimpleDTO videoMergeDTO) throws IOException {
+    public R simpleAutoMerge(@RequestBody @Validated VideoMergeSimpleDTO videoMergeDTO) throws IOException {
         String imageAutoCreate = videoAutoService.videoAutoMergeSimple(videoMergeDTO);
-        return ResponseEntity.ok(imageAutoCreate);
+        return R.ok(imageAutoCreate);
     }
 
     @PostMapping("/batchAutoMerge")
@@ -36,9 +37,9 @@ public class VideoAutoMergeController {
    /* @ApiImplicitParam(name="videoMergeDTO", value = "视频合批量并入参",
             dataTypeClass = VideoMergeBatchDTO.class,
             paramType="body", required = true)*/
-    public ResponseEntity<String> batchAutoMerge(@RequestBody @Validated VideoMergeBatchDTO videoMergeDTO) throws IOException {
+    public R<String> batchAutoMerge(@RequestBody @Validated VideoMergeBatchDTO videoMergeDTO) throws IOException {
         String imageAutoCreate = videoAutoService.videoAutoMergeBatch(videoMergeDTO);
-        return ResponseEntity.ok(imageAutoCreate);
+        return R.ok(imageAutoCreate);
     }
 
 }

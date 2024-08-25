@@ -59,6 +59,7 @@ public class ImageAutoServiceImpl implements ImageAutoService {
         }catch (Exception e){
         e.printStackTrace();
         msg = e.getMessage();
+            throw new RuntimeException(e);
         }
         return msg;
     }
@@ -77,6 +78,7 @@ public class ImageAutoServiceImpl implements ImageAutoService {
         }catch (Exception e){
             e.printStackTrace();
             msg = e.getMessage();
+            throw new RuntimeException(e);
         }
         return msg;
     }

@@ -90,6 +90,15 @@
             <version>5.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
         <!--<dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
