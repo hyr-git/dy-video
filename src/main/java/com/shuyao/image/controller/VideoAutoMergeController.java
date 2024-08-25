@@ -5,6 +5,8 @@ import com.shuyao.image.dto.VideoMergeSimpleDTO;
 import com.shuyao.image.service.VideoAutoService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +24,9 @@ public class VideoAutoMergeController {
 
     @PostMapping("/simpleAutoMerge")
     @ApiOperation(value = "单个文件视频合并")
-    public String simpleAutoMerge(@RequestBody VideoMergeSimpleDTO videoMergeDTO) throws IOException {
+    public ResponseEntity simpleAutoMerge(@RequestBody @Validated VideoMergeSimpleDTO videoMergeDTO) throws IOException {
         String imageAutoCreate = videoAutoService.videoAutoMergeSimple(videoMergeDTO);
-        return "success";
+        return ResponseEntity.ok(imageAutoCreate);
     }
 
     @PostMapping("/batchAutoMerge")
@@ -34,9 +36,9 @@ public class VideoAutoMergeController {
    /* @ApiImplicitParam(name="videoMergeDTO", value = "视频合批量并入参",
             dataTypeClass = VideoMergeBatchDTO.class,
             paramType="body", required = true)*/
-    public String batchAutoMerge(@RequestBody VideoMergeBatchDTO videoMergeDTO) throws IOException {
+    public ResponseEntity<String> batchAutoMerge(@RequestBody @Validated VideoMergeBatchDTO videoMergeDTO) throws IOException {
         String imageAutoCreate = videoAutoService.videoAutoMergeBatch(videoMergeDTO);
-        return "success";
+        return ResponseEntity.ok(imageAutoCreate);
     }
 
 }

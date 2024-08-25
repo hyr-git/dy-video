@@ -41,8 +41,7 @@ public class Image2Mp4 {
         //图片地址 这里面放了22张图片
 
 
-        // createVideoWithMp3(mp4SavePath,mp3Path, files);
-        //createVideoWithAudioByImgDir(mp4SavePath,mp3Path,img);
+        //createVideoWithAudioByImgFolder(mp4SavePath,img,mp3Path);
         batchCreateVideoByParentFolder(mp4SaveFolder, imgBatchFile,mp3Path);
 
 
@@ -82,7 +81,7 @@ public class Image2Mp4 {
                         }
 
                         //createViewMp4(mp4SavePath+viedImageFile.getName()+".mp4", imageFiles);
-                        createVideoWithMp3(saveFolder+File.separator+viedImageFile.getName(),mp3Path, imageFiles);
+                        createVideoWithAudio(saveFolder+File.separator+viedImageFile.getName()+".mp4",mp3Path, imageFiles);
 
                     }
                 }
@@ -92,28 +91,28 @@ public class Image2Mp4 {
 
     /****
      * 将指定文件夹的图片合成MP4
-     * @param mp4SaveDir
-     * @param audioPath
+     * @param mp4SavePath
      * @param imageFileDir
+     * @param audioPath
      * @throws Exception
      */
-    public static void createVideoWithAudioByImgDir(String mp4SaveDir,String audioPath,String imageFileDir) throws Exception {
+    public static void createVideoWithAudioByImgFolder(String mp4SavePath,String imageFileDir,String audioPath) throws Exception {
         File file = new File(imageFileDir);
         if(null != file && file.isDirectory()){
             File[] imageFiles = file.listFiles();
-            createVideoWithMp3(mp4SaveDir, audioPath, imageFiles);
+
+            createVideoWithAudio(mp4SavePath, audioPath, imageFiles);
         }
 
     }
 
 
-    private static void createVideoWithMp3(String mp4SaveDir,String audioPath,  File[] imageFiles) throws Exception {
+    private static void createVideoWithAudio(String mp4SavePath,String audioPath,  File[] imageFiles) throws Exception {
         List<File> fileList = new ArrayList<>();
         for (File file1: imageFiles) {
             fileList.add(file1);
         }
-        String mp4SavePathName = mp4SaveDir+".mp4";
-        createVideoWithMp3(mp4SavePathName, audioPath,fileList, width, height);
+        createVideoWithMp3(mp4SavePath, audioPath,fileList, width, height);
     }
 
 

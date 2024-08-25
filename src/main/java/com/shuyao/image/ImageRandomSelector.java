@@ -103,11 +103,11 @@ public class ImageRandomSelector {
 
 
 
-    public static void generateNewFolders(String sourceDirPath,String outDirPath,String newDirFileName,int newViewFolders, double repeatRate) throws IOException {
+    public static void generateNewFolders(String sourceDirFolder,String outDirPath,String newDirFileName,int newViewFolders, double repeatRate) throws IOException {
 
         ImageRandomSelector imageRandomSelector = new ImageRandomSelector();
 
-        log.info("generateNewFolders: " + sourceDirPath);
+        log.info("generateNewFolders: " + sourceDirFolder);
 
         if(StringUtils.isEmpty(newDirFileName)){
             newDirFileName = DateUtil.format(new Date(), "yyyy-MM-dd-HH")+"-";
@@ -116,15 +116,15 @@ public class ImageRandomSelector {
         }
 
         //一、获取指定文件夹下的所有文件
-        File folder = new File(sourceDirPath);
+        File folder = new File(sourceDirFolder);
         if(folder == null || !folder.exists() || !folder.isDirectory()){
-            log.error("文件夹为空: " + sourceDirPath);
+            log.error("文件夹为空: " + sourceDirFolder);
         }
 
         File[] fileFolders = folder.listFiles();
 
         if (fileFolders == null) {
-            log.error("文件夹为空: " + sourceDirPath);
+            log.error("文件夹为空: " + sourceDirFolder);
             return ;
         }
 
@@ -157,12 +157,19 @@ public class ImageRandomSelector {
 
             List<String> randomImageFolders = entry.getValue();
             log.info("newViewFolderName:{},values:{}",newViewFolderName,randomImageFolders);
-            imageRandomSelector.createBatchRandomImageFolders(randomImageFolders,sourceDirPath,outDirPath,newViewFolderName);
+            imageRandomSelector.createBatchRandomImageFolders(randomImageFolders,sourceDirFolder,outDirPath,newViewFolderName);
         }
     }
 
 
-    private void  createBatchRandomImageFolders (List<String> randomImageFolders,String sourceDirPath,String outDirPath,String newViewFolderName) {
+    /***
+     * 批量生成随机图片
+     * @param randomImageFolders
+     * @param sourceDirFolder
+     * @param outDirPath
+     * @param newViewFolderName
+     */
+    private void  createBatchRandomImageFolders (List<String> randomImageFolders,String sourceDirFolder,String outDirPath,String newViewFolderName) {
         randomImageFolders.stream().forEach(item->{
             Runnable run = new Runnable() {
                 @Override
@@ -174,7 +181,7 @@ public class ImageRandomSelector {
 
                     //log.info("tempName: " + tempName + " tempImageName: " + tempImageName);
                     //老的文件路径
-                    File oldFile = new File(sourceDirPath + "\\" + tempName + "\\" , tempImageName);
+                    File oldFile = new File(sourceDirFolder + "\\" + tempName + "\\" , tempImageName);
 
                     int number = Integer.parseInt(tempName);
 
