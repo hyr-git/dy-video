@@ -104,7 +104,7 @@ public class VideoFileUtils {
 
 
     public static void main(String[] args) {
-        String directory = "D:\\showFile\\0824-0824-脚本X22(1)"; // 替换为视频文件所在的目录
+        String directory = "D:\\image\\out\\0720-xiaohongshu(5)"; // 替换为视频文件所在的目录
         List<File> fileList = VideoFileUtils.getVideoFiles(directory);
         VideoFileUtils.sortFilesByFieldName(fileList);
         for (File file : fileList) {

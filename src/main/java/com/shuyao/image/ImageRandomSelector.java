@@ -179,11 +179,18 @@ public class ImageRandomSelector {
                     String tempName = split[0];
                     String tempImageName = split[1];
 
+                    // 修复点：提取文件夹名称中的数字部分
+                    String numericPart = extractLeadingDigits(tempName);
+                    int number = 0;
+                    try {
+                        number = Integer.parseInt(numericPart);
+                    } catch (NumberFormatException e) {
+                        log.error("无法解析文件夹名称中的数字: {}", tempName, e);
+                    }
+
                     //log.info("tempName: " + tempName + " tempImageName: " + tempImageName);
                     //老的文件路径
                     File oldFile = new File(sourceDirFolder + "\\" + tempName + "\\" , tempImageName);
-
-                    int number = Integer.parseInt(tempName);
 
 
                     if(renameImageFlag){
@@ -205,6 +212,18 @@ public class ImageRandomSelector {
         });
     }
 
+    // 新增辅助方法：提取开头的数字部分
+    private String extractLeadingDigits(String input) {
+        StringBuilder digits = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isDigit(c)) {
+                digits.append(c);
+            } else {
+                break; // 遇到第一个非数字字符时停止
+            }
+        }
+        return digits.length() > 0 ? digits.toString() : "0";
+    }
 
     private void  createRandomImageFolders (List<String> randomImageFolders,String sourceDirPath,String outDirPath,String newViewFolderName) {
         randomImageFolders.stream().forEach(item->{

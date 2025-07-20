@@ -29,9 +29,9 @@ public class Image2Mp4 {
 
     private static double videoFrameRate = 0.3;
 
-    static String mp3Path ="D:\\showFile\\000000001.MP3";
+    static String mp3Path ="D:\\\\video-show\\\\yinyue.mp3";
 
-    static String imgBatchFile = "D:\\showFile011\\";
+    static String imgBatchFile = "D:\\\\image\\\\out";
 
     static String img = "D:\\showFile012\\0820-scrit23-jojso(1)\\";
 
